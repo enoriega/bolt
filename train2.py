@@ -109,7 +109,8 @@ def get_dataset():
         print aligned_ref
         print aligned_hyp
         print tags
-        tags = [int(s=='ERROR') for s in tags]
+        # everything that is not ok is an error
+        tags = [int(s!='OK') for s in tags]
         target.append(tags)
         ascore, lscore, _ = read_nbest(nbest)[0]
         for v in feature_vectors(aligned_hyp, sausage, score, ascore, lscore, word_scores):
