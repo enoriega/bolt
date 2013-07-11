@@ -22,7 +22,7 @@ from boltdata import read_output
 from sausages import Sausage, read_nbest, read_word_scores
 from difflib import SequenceMatcher
 
-delete_token = '*delete_token*'
+delete_token = '*delete*'
 
 def get_tokens(s):
     func = lambda x: not re.match(r'^\*+$', x)
