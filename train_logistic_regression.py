@@ -4,7 +4,6 @@
 from __future__ import division
 
 import re
-import pickle
 import numpy as np
 from sklearn.datasets.base import Bunch
 from sklearn.metrics import classification_report, confusion_matrix, Scorer
@@ -20,9 +19,9 @@ from sklearn.feature_selection import f_classif, SelectKBest
 from nltk.probability import entropy
 from boltdata import read_output
 from sausages import Sausage, read_nbest, read_word_scores
-from difflib import SequenceMatcher
+import pickle
 
-delete_token = '*delete_token*'
+
 
 def get_tokens(s):
     func = lambda x: not re.match(r'^\*+$', x)
@@ -40,12 +39,12 @@ def get_stats(slot):
 def count_deletes(aligned_hyp, idx):
     count = 0
     for i in reversed(xrange(idx)):
-        if aligned_hyp[i] == delete_token:
+        if aligned_hyp[i] == '*DELETE*':
             count += 1
         else:
             break
     for i in xrange(idx+1, len(aligned_hyp)):
-        if aligned_hyp[i] == delete_token:
+        if aligned_hyp[i] == '*DELETE*':
             count += 1
         else:
             break
@@ -54,25 +53,21 @@ def count_deletes(aligned_hyp, idx):
 
 
 def feature_vectors(hyp, aligned_hyp, sausage, score, ascore, lscore):
-    '''returns a feature vector for the logistic regression'''
     entropies = [entropy(slot) for slot in sausage.sausage]
     len_ratio = len(hyp) / len(aligned_hyp)
-    num_deletes = sum(1 for tok in aligned_hyp if tok == delete_token)
+    num_deletes = sum(1 for tok in aligned_hyp if tok == '*DELETE*')
     vec = [sausage.score_hyp(aligned_hyp), score, ascore, lscore,
            min(entropies), max(entropies), num_deletes, len_ratio]
     return vec
 
+
+
 def get_dataset():
-    '''returns a data set taylored for the logistic regression'''
     target_names = np.char.array(['OK', 'ERROR'])
     target = []
     data = []
-    names = []
-    hyps = []
     for name, ref, hyp, sausage, lattice, nbest in zip(*read_output()):
         # print name
-	names.append(name)
-	hyps.append(hyp)
         tag = int(ref != hyp)
         ref = get_tokens(ref)
         hyp = get_tokens(hyp)
@@ -88,66 +83,60 @@ def get_dataset():
     data = scale(np.array(data))
     # data = np.array(data)
     target = np.array(target)
-    np_names = np.char.array(names)
-    hyps = np.char.array(hyps)
-    return Bunch(data=data, target=target, target_names=target_names, names = np_names, hyps = hyps)
+    return Bunch(data=data, target=target, target_names=target_names)
 
-def get_dataset_linear_regression(ids=None):
-    '''returns a dataset taylored for the linear regression'''
+
+
+def test_classifier(clf, X_train, X_test, y_train, y_test):
+    print clf
+    clf = clf.fit(X_train, y_train)
+    y_pred = clf.predict(X_test)
+    print
+    print classification_report(y_test, y_pred, target_names=data.target_names)
+    print 'confusion matrix'
+    print confusion_matrix(y_test, y_pred)
+    print
+
+@Scorer
+def my_score(ground_truth, predictions):
+    cls = 1
+    tp = fp = tn = fn = 0
+    for t,p in zip(ground_truth, predictions):
+        if p == cls:
+            if t == p:
+                tp += 1
+            else:
+                fp += 1
+        else:
+            if t == p:
+                tn += 1
+            else:
+                fn += 1
+    return 0 if tp + fp == 0 else tp / (tp + fp)
+
+if __name__ == '__main__':
+    print 'reading data ...'
+    data = get_dataset()
+    print
+    print 'n_samples =', data.data.shape[0]
+    print 'n_features =', data.data.shape[1]
     
-    target = []
-    data = []
-    names = []
-    hyps = []
+    print 'splitting data ...'
+    # fselect = SelectKBest(f_classif)
+    # fselect.fit(data.data, data.target)
+    # data.data = fselect.transform(data.data)
+    # split into train and test datasets
+    X_train, X_test, y_train, y_test = train_test_split(data.data, data.target, test_size=0.25)
 
-    if ids is not None:
-        with open(ids, 'r') as f:
-            ids = pickle.load(f)
+    print
+    params = {'penalty': ['l1','l2'], 'C': [0.01, 0.1, 1, 10, 100, 1000]}
+    clf = GridSearchCV(LogisticRegression(), params)
+    test_classifier(clf, X_train, X_test, y_train, y_test)
 
- 
-    skipped = 0
-    for name, ref, hyp, sausage, lattice, nbest in zip(*read_output()):
+    # Save the best estimator
+    with open('logistic_regression.pickle', 'wb') as f:
+        pickle.dump(clf.best_estimator_, f)
 
-	if ids is not None and name not in ids:
-            skipped += 1
-            continue
-
-        names.append(name)
-	hyps.append(hyp)
-        ref = get_tokens(ref)
-	#dirty_hyp = hyp.lower().split()
-  	hyp = get_tokens(hyp)
-        sausage = Sausage.from_file(sausage)
-        try:
-            aligned_hyp, score = sausage.align_hyp(' '.join(hyp))
-        except:
-            continue    
-	#Add the WER to targets
-	target.append(WER(ref, hyp))
-        ascore, lscore, _ = read_nbest(nbest)[0]
-        v = [lscore, score, len([t for t in aligned_hyp if t == delete_token]), len(hyp), 1.0/float(len(hyp))]
-        data.append(v)
-    data = scale(np.array(data))
-    # data = np.array(data)
-    target = np.array(target)
-    np_names = np.char.array(names)
-    hyps = np.char.array(hyps)
-    return Bunch(data=data, target=target, names = np_names, hyps = hyps)
-
-def align(x,y):
-    s = SequenceMatcher()
-    s.set_seq1(x)
-    s.set_seq2(y)
-    return s.get_opcodes()
-
-def WER (ref, hyp) :
-    # Computes Word Error Rate via sequence alignment
-    opcodes = align(ref,hyp)
-    errors = 0
-    for code in opcodes:
-        if code[0] ==   'replace': errors += 2 * (code[4] - code[3])
-        elif code[0] == 'insert': errors += (code[4] - code[3])
-        elif code[0] == 'delete': errors += (code[2] - code[1])
-    #if len(ref) > 0 and len(hyp) > 0: return (2 * errors) / float(len(ref)+len(hyp))
-    if len(ref) > 0 and len(hyp) > 0: return errors
-    else: return 0
+    clf = clf.best_estimator_
+    y_predict = clf.predict(data.data)
+    print confusion_matrix(data.target, y_predict) 

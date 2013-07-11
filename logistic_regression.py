@@ -3,7 +3,7 @@ import prepare_dataset_sxs as pd
 import pickle
 
 
-with open('lr.pickle', 'r') as f:
+with open('logistic_regression.pickle', 'r') as f:
 	model = pickle.load(f)
 
 data_set = pd.get_dataset()
