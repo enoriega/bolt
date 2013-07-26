@@ -4,6 +4,18 @@
 
 {% block content %}
 
-    <h1>Select a hyp</h1>
+    <h3>Here is what I understood:</h3>
+    <br />
+    <p class="text-center text-error" style="font-size:2em">
+        {{ hyp }}
+    </p>
+    <br />
+    <p class="lead"><small>I believe there is something wrong, though, please select the correct sentence from below or continue if necessary.</small></p>
+    
+    <select multiple="multiple">
+        {% for item in nbest %}
+            <option style="color:green">{{ item }}</option>
+        {% endfor %}
+    </select
 
 {% endblock %}
