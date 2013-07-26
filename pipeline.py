@@ -1,4 +1,5 @@
 from prepare_dataset_sxs import get_dataset, get_dataset_linear_regression
+from plot_probs import get_counts
 import pickle
 
 print 'Loading classifiers ...'
@@ -43,3 +44,5 @@ print 'Pred err > 4:', y_pred_err[y_pred_err > 4].shape[0], 'Pred err <= 4:', y_
 
 print 'Mean WER pred ok > 2:', bunch.target[y_pred_ok > 2].mean(), 'Mean WER pred ok <= 2:', bunch.target[y_pred_ok <=2].mean()
 print 'Mean WER pred err > 4:', bunch.target[y_pred_err > 4].mean(), 'Mean WER pred err <= 4:', bunch.target[y_pred_err <=4].mean()
+
+print 'No. of refs in nbest for pred err <= 4:', get_counts(5, bunch.names[y_pred_err <=4]), 'out of', y_pred_err[y_pred_err <= 4].shape[0] 
