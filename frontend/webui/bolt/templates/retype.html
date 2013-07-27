@@ -6,10 +6,13 @@
 
     <h4>Please type again what you meant:</h4>
     <br />
-    <div style="text-align:center">
-        <span style="display:inline">{{ form.sentence| as_bootstrap }}</span>
+    <form method="post" >
+    {% csrf_token %}
+        <div style="text-align:center">
+            <span style="display:inline">{{ form.sentence| as_bootstrap }}</span>
 
-        <span style="display:inline"><button class="btn">Continue</button></span>
-    </div>
+            <input type="submit" value="Continue" class="btn btn-primary" />
+        </div>
+    </form>
 
 {% endblock %}

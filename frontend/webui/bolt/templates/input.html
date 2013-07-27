@@ -11,8 +11,11 @@
 
 
         function setVals(num){
+            $("#refid").val(num)
             $("#ref").val(refs[num-1])
             $("#hyp").text(hyps[num-1])
+            $("#hyp-hidden").val(hyps[num-1])
+            $("#hidder").css('display', 'block')
             $("#continue").removeAttr("disabled")
         }
 
@@ -45,7 +48,8 @@
                 
                 <label style="display:inline" for="refid">Ref #:&nbsp;<input style="display:inline" class="input-mini" id="refid" name="refid" type="text" placeholder="123" maxlength="5" /></label>
                 <div class="input-append">
-                    <input id="ref" type="text" class="input-xxlarge" disabled="disabled" value="This is a ref"></input>
+                    <input id="ref" name="ref" type="text" class="input-xxlarge" disabled="disabled" value="This is a ref"></input>
+                    <input type="hidden" name="hyp" id="hyp-hidden" />
                     <button id="lucky" class="btn">I'm feeling lucky</buton>
                 </div>
 
@@ -59,11 +63,13 @@
         
     </div>
     <br />
+    <div id="hidder" style="display:none">
     <p class="lead">Here is what I heard:</p>
 
     <p class="text-center text-info" style="font-size:3em" id="hyp">This is the hyp for the ref</p>
     <br />
     <br />
+    </div>
     <div class="row">
         <div class="span2 offset5">
             <button disabled="disabled" id="continue" class="btn btn-primary btn-large">Continue</button>

@@ -13,9 +13,13 @@
             $("#retype").click(function(){
                 $("#action").val("retype");
             });
+            
+            $("#select").click(function(){
+                $("#action").val("translation");
+            });
 
             $("#choices").change(function(){
-                $("#retype").removeAttr('disabled')
+                $("#select").removeAttr('disabled')
             });
         });
     </script>
@@ -24,7 +28,8 @@
 {% block content %}
 
     <form method="post" action="{% url 'selected' %}">
-    <input type="hidden" name="action" id="action" />
+        <input type="hidden" name="action" id="action" />
+        <input type="hidden" name="hyp" id="hyp" value="{{ hyp }}" />
      {% csrf_token %} 
     <h3>Here is what I understood:</h3>
     <br />
@@ -47,11 +52,14 @@
 
     <div class="row">
         
-        <div class="span1 offset5">
+        <div class="span1 offset4">
             <input type="submit" id="ignore" class="btn btn-large" value="Ignore" />
         </div>
         <div class="span1">
-            <input type="submit" id="retype" disabled="disabled" class="btn btn-primary btn-large" value="Select" />
+            <input type="submit" id="retype" class="btn btn-large" value="Retype" />
+        </div>
+        <div class="span1">
+            <input type="submit" id="select" disabled="disabled" class="btn btn-primary btn-large" value="Select" />
         </div>
     </div>
     </form>
