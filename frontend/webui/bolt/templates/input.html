@@ -2,10 +2,72 @@
 
 {% load bootstrap_toolkit %}
 
+{% block extra_head %}
+    
+    <script type="text/javascript">
+        var ids = [1, 2, 3, 4, 5];
+        var refs = ["Ref 1", "Ref 2", "Ref 3", "Ref 4", "Ref 5"];
+        var hyps = ["Hyp 1", "Hyp 2", "Hyp 3", "Hyp 4", "Hyp 5"];
+
+
+        function setVals(num){
+            $("#ref").val(refs[num-1])
+            $("#hyp").text(hyps[num-1])
+            $("#continue").removeAttr("disabled")
+        }
+
+        $(document).ready(function(){
+            $("#refid").focusout(function(){
+                num = $(this).val()
+                setVals(num);       
+            });
+            $("#lucky").click(function(){
+                num = Math.floor((Math.random()*ids.length)+1);
+                setVals(num)
+                return false;
+            })
+        });
+    </script>
+
+{% endblock %}
+
 {% block content %}
 
     <h1>Input</h1>
 
     <br />
     <br />
+    <form class="form-inline controls" method="post" action="{% url 'better-choice' %}">
+     {% csrf_token %} 
+    <div class="row">
+        <div class="offset2">
+            
+                
+                <label style="display:inline" for="refid">Ref #:&nbsp;<input style="display:inline" class="input-mini" id="refid" name="refid" type="text" placeholder="123" maxlength="5" /></label>
+                <div class="input-append">
+                    <input id="ref" type="text" class="input-xxlarge" disabled="disabled" value="This is a ref"></input>
+                    <button id="lucky" class="btn">I'm feeling lucky</buton>
+                </div>
+
+
+                <br />
+                <br />
+                
+                
+            
+        </div>
+        
+    </div>
+    <br />
+    <p class="lead">Here is what I heard:</p>
+
+    <p class="text-center text-info" style="font-size:3em" id="hyp">This is the hyp for the ref</p>
+    <br />
+    <br />
+    <div class="row">
+        <div class="span2 offset5">
+            <button disabled="disabled" id="continue" class="btn btn-primary btn-large">Continue</button>
+        </div>
+    </div>
+    </form>
 {% endblock %}

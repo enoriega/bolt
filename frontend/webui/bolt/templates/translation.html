@@ -11,7 +11,9 @@
     <p class="text-center text-success lead" style="font-size:3em">{{ hyp }}</p>
         <br />
     <div style="text-align:center">
-    <button class="text-center btn btn-primary">Start over</buttton>
     
+    <form action="{% url 'input' %}">
+    <button class="text-center btn btn-primary">Start over</button>
+    </form>
     </div>
 {% endblock %}

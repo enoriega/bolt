@@ -2,20 +2,58 @@
 
 {% load bootstrap_toolkit %}
 
+{% block extra_head %}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            
+            $("#ignore").click(function(){
+                $("#action").val("ignore");
+            });
+
+            $("#retype").click(function(){
+                $("#action").val("retype");
+            });
+
+            $("#choices").change(function(){
+                $("#retype").removeAttr('disabled')
+            });
+        });
+    </script>
+{% endblock %}
+
 {% block content %}
 
+    <form method="post" action="{% url 'selected' %}">
+    <input type="hidden" name="action" id="action" />
+     {% csrf_token %} 
     <h3>Here is what I understood:</h3>
     <br />
     <p class="text-center text-error" style="font-size:2em">
         {{ hyp }}
     </p>
     <br />
-    <p class="lead"><small>I believe there is something wrong, though, please select the correct sentence from below or continue if necessary.</small></p>
+    <p class="lead text-center"><small>I believe there's something wrong though, please select the correct sentence from below or continue if necessary.</small></p>
     
-    <select multiple="multiple">
-        {% for item in nbest %}
-            <option style="color:green">{{ item }}</option>
-        {% endfor %}
-    </select
+    <div class="row">
+        <div class="span8 offset2">
+            <select multiple="multiple" id="choices" name="choices" style="width:100%; min-heigth:4000px; font-size:2em">
+                {% for item in nbest %}
+                    <option style="color:green; margin-bottom:5px">{{ item }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+    </div>
+
+    <div class="row">
+        
+        <div class="span1 offset5">
+            <input type="submit" id="ignore" class="btn btn-large" value="Ignore" />
+        </div>
+        <div class="span1">
+            <input type="submit" id="retype" disabled="disabled" class="btn btn-primary btn-large" value="Select" />
+        </div>
+    </div>
+    </form>
 
 {% endblock %}

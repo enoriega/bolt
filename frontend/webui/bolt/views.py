@@ -1,13 +1,15 @@
 # Create your views here.
-from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, render
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render
 from forms import *
+from django.core.urlresolvers import reverse
+from django.http import Http404
 
 def index(request):
     return HttpResponse("Hello, world!")
 
 def better_choice(request):
-    return render(request, 'choice.html', {"hyp":"This is a wrong hyp", "nbest":['one', 'two', 'three']})
+    return render(request, 'choice.html', {"hyp":"This is a wrong hyp", "nbest":['one', 'two', 'three', 'four', 'five', 'six']})
 
 def retype_ref(request):
     form = RetypeForm()
@@ -19,3 +21,10 @@ def translation(request):
 
 def input(request):
     return render(request, 'input.html')
+
+def selected(request):
+    try:
+        action = request.POST['action']
+        return HttpResponseRedirect(reverse('retype-ref')) if action == 'retype' else HttpResponseRedirect(reverse('translation'))
+    except KeyError:
+        raise Http404
