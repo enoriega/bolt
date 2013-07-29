@@ -1,0 +1,7 @@
+libblas-dev
+liblapack-dev
+gfortran
+libfreetype6
+libfreetype6-dev
+libpng12-0
+libpng12-dev
