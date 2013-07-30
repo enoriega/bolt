@@ -6,7 +6,7 @@ from __future__ import division
 import re
 import numpy as np
 from sklearn.datasets.base import Bunch
-from sklearn.metrics import classification_report, confusion_matrix, Scorer
+from sklearn.metrics import classification_report, confusion_matrix, make_scorer
 from sklearn.cross_validation import train_test_split
 from sklearn.naive_bayes import GaussianNB
 from sklearn.linear_model import LogisticRegression, PassiveAggressiveClassifier
@@ -97,7 +97,7 @@ def test_classifier(clf, X_train, X_test, y_train, y_test):
     print confusion_matrix(y_test, y_pred)
     print
 
-@Scorer
+@make_scorer
 def my_score(ground_truth, predictions):
     cls = 1
     tp = fp = tn = fn = 0

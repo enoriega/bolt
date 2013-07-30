@@ -7,7 +7,7 @@ import re
 import pickle
 import numpy as np
 from sklearn.datasets.base import Bunch
-from sklearn.metrics import classification_report, confusion_matrix, Scorer
+from sklearn.metrics import classification_report, confusion_matrix, make_scorer
 from sklearn.cross_validation import train_test_split
 from sklearn.naive_bayes import GaussianNB
 from sklearn.linear_model import LogisticRegression, PassiveAggressiveClassifier
