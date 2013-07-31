@@ -74,7 +74,7 @@ class Sausage(object):
     def __init__(self, sausage, nbests = None, id = None):
         self.sausage = sausage
         
-        self.__nbests = nbests
+        self.nbests = nbests
         self.id = id
 
     @classmethod

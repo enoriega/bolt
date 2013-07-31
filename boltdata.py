@@ -8,8 +8,7 @@ import numpy as np
 
 
 
-#DATADIR = os.path.expanduser('/bolten/arizona_recognizer_test')
-DATADIR = os.path.expanduser('~/bolten/arizona_recognizer_test')
+DATADIR = os.path.expanduser('/bolten/arizona_recognizer_test')
 # DATADIR = os.path.expanduser('~/Downloads/arizona_recognizer_test')
 OUTPUTDIR = os.path.join(DATADIR, 'output')
 VOCABFILE = os.path.join(DATADIR, 'models',

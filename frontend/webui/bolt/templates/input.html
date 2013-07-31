@@ -8,15 +8,21 @@
         var ids = [1, 2, 3, 4, 5];
         var refs = ["Ref 1", "Ref 2", "Ref 3", "Ref 4", "Ref 5"];
         var hyps = ["Hyp 1", "Hyp 2", "Hyp 3", "Hyp 4", "Hyp 5"];
+        var ref_num = {{ ref_num }}
 
 
         function setVals(num){
             $("#refid").val(num)
-            $("#ref").val(refs[num-1])
-            $("#hyp").text(hyps[num-1])
-            $("#hyp-hidden").val(hyps[num-1])
-            $("#hidder").css('display', 'block')
-            $("#continue").removeAttr("disabled")
+            url = '{% url 'read-sausage' 0 %}'
+            url = url.replace('0', num);
+            $.ajax(url).done(function(data){
+                data = JSON.parse(data)
+                $("#ref").val(data.ref)
+                $("#hyp").text(data.hyp)
+                $("#hyp-hidden").val(data.hyp)
+                $("#hidder").css('display', 'block')
+                $("#continue").removeAttr("disabled")
+            });
         }
 
         $(document).ready(function(){
@@ -25,7 +31,7 @@
                 setVals(num);       
             });
             $("#lucky").click(function(){
-                num = Math.floor((Math.random()*ids.length)+1);
+                num = Math.floor((Math.random()*ref_num)+1);
                 setVals(num)
                 return false;
             })
@@ -46,9 +52,9 @@
         <div class="offset2">
             
                 
-                <label style="display:inline" for="refid">Ref #:&nbsp;<input style="display:inline" class="input-mini" id="refid" name="refid" type="text" placeholder="123" maxlength="5" /></label>
+                <label style="display:inline" for="refid">Ref #:&nbsp;<input style="display:inline" placeholder="0-{{ref_num}}" class="input-mini" id="refid" name="refid" type="text" placeholder="123" maxlength="5" /></label>
                 <div class="input-append">
-                    <input id="ref" name="ref" type="text" class="input-xxlarge" disabled="disabled" value="This is a ref"></input>
+                    <input id="ref" name="ref" type="text" class="input-xxlarge" disabled="disabled"></input>
                     <input type="hidden" name="hyp" id="hyp-hidden" />
                     <button id="lucky" class="btn">I'm feeling lucky</buton>
                 </div>
