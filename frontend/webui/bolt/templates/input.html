@@ -46,13 +46,13 @@
 
     <br />
     <br />
-    <form class="form-inline controls" method="post" action="{% url 'better-choice' %}">
+    <form class="form-inline controls" method="post" action="{% url 'logistic-classification' %}">
      {% csrf_token %} 
     <div class="row">
         <div class="offset2">
             
                 
-                <label style="display:inline" for="refid">Ref #:&nbsp;<input style="display:inline" placeholder="0-{{ref_num}}" class="input-mini" id="refid" name="refid" type="text" placeholder="123" maxlength="5" /></label>
+                <label style="display:inline" for="refid">Ref #:&nbsp;<input style="display:inline" placeholder="0-{{ref_num}}" class="input-mini" id="refid" name="refid" type="text" maxlength="5" /></label>
                 <div class="input-append">
                     <input id="ref" name="ref" type="text" class="input-xxlarge" disabled="disabled"></input>
                     <input type="hidden" name="hyp" id="hyp-hidden" />
@@ -72,7 +72,7 @@
     <div id="hidder" style="display:none">
     <p class="lead">Here is what I heard:</p>
 
-    <p class="text-center text-info" style="font-size:3em" id="hyp">This is the hyp for the ref</p>
+    <p class="text-center text-info" style="font-size:1em" id="hyp">This is the hyp for the ref</p>
     <br />
     <br />
     </div>

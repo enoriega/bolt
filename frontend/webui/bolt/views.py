@@ -7,15 +7,19 @@ from django.http import Http404
 from sausages import Sausage
 import bolt
 import json
+from classification import *
+import pdb
 
 def index(request):
     return HttpResponse("Hello, world!")
 
 def better_choice(request):
-    refid = request.POST['refid']
+    #refid = request.POST['refid']
     #ref = request.POST['ref']
-    hyp = request.POST['hyp']
-    nbest = [' '.join(nb[2]) for nb in request.session['sausage'].nbests]
+    #hyp = request.POST['hyp']
+    hyp = request.session['hyp']
+    sausage = request.session['sausage']
+    nbest = [' '.join(nb[2]) for nb in sausage.nbests]
     return render(request, 'choice.html', {"hyp":hyp, "nbest":nbest})
 
 def retype_ref(request):
@@ -67,7 +71,50 @@ def read_sausage(request, idx):
     sausage = Sausage.from_file(sausage_path, nbest_file=bolt.nbests[idx])
     ref = bolt.refs[idx]
     hyp = bolt.hyps[idx]
+    nbest = bolt.nbests[idx]
     request.session['sausage'] = sausage
+    request.session['hyp'] = hyp
+    request.session['ref'] = ref
+    request.session['nbest'] = nbest
     ret = {'ref': ref, 'hyp' : hyp }
 
     return HttpResponse(json.dumps(ret))
+
+def logistic_classification(request):
+    idx = int(request.POST['refid'])                                     
+    hyp = bolt.hyps[idx]
+    sausage = Sausage.from_file(bolt.sausages[idx], bolt.nbests[idx])
+    ref = bolt.refs[idx]
+    nbest = bolt.nbests[idx]
+    request.session['sausage'] = sausage
+    request.session['hyp'] = hyp
+    request.session['ref'] = ref
+    request.session['nbest'] = nbest
+
+    # Classify in order to move on to the corresponding step
+    vector = create_feature_vector_logistic(hyp, sausage, nbest)
+    result = ok_or_error(vector)[0]
+
+    # Change this to correctly handle a numpy array
+    if result == 0:
+        request.session['translated'] = hyp
+        return HttpResponseRedirect(reverse('translation'))
+    else:
+        return HttpResponseResirect(reverse('linear-regression'))
+
+
+def linear_regression(request):
+    threshold = 4
+    hyp = request.session['hyp']
+    sausage = request.session['sausage']
+    nbest = request.session['nbest']
+
+    vector = create_feature_vector_linear(hyp, sausage, nbest)
+    result = predicted_wer(vector)
+
+    # Change this to correctly handle a numpy array
+    if result < threshold:
+        return HttpResponseRedirect(reverse('better-choice'))
+    else:
+        request.session['translated'] = hyp
+        return HttpResponseRedirect(revesre('translation'))

@@ -10,4 +10,6 @@ urlpatterns = patterns('',
     url(r'^retype/*$', views.retype_ref, name='retype-ref'),
     url(r'^translation/*$', views.translation, name='translation'),
     url(r'^read_sausage/(\d+)/$', views.read_sausage, name='read-sausage'),
+    url(r'^logistic_classifiation/$', views.logistic_classification, name='logistic-classification'),
+    url(r'^linear_regression/$', views.linear_regression, name='linear-regression'),
 )
