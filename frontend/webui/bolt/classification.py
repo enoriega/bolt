@@ -13,6 +13,12 @@ with open(os.path.join(base_path, 'logistic_regression.pickle'), 'rb') as f:
 with open(os.path.join(base_path,'linear_regression.pickle'), 'rb') as f:
     linear_regression = pickle.load(f)
 
+with open(os.path.join(base_path, 'logistic_vectors.pickle'), 'rb') as logf:
+    logistic_vectors = pickle.load(logf)
+
+with open(os.path.join(base_path, 'linear_vectors.pickle'), 'rb') as linf:
+    linear_vectors = pickle.load(linf)
+
 def create_feature_vector_logistic(hyp, sausage, nbest):
     data = []
     
@@ -30,7 +36,7 @@ def create_feature_vector_logistic(hyp, sausage, nbest):
 def ok_or_error(vector):
     X = logistic_classifier.predict(vector)
     
-    return list(X)
+    return X.astype(int)
 
 def create_feature_vector_linear(hyp, sausage, nbest):
     data = []
@@ -46,4 +52,4 @@ def create_feature_vector_linear(hyp, sausage, nbest):
 def predicted_wer(vector):
     X = linear_regression.predict(vector)
 
-    return list(X)
+    return X.astype(float)

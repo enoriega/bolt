@@ -39,7 +39,7 @@ def translation(request):
     return render(request, 'translation.html', {"hyp": hyp})
 
 def input(request):
-    data = { 'ref_num' : bolt.ref_num }
+    data = { 'ref_num' : bolt.ref_num - 1}
     return render(request, 'input.html', data)
 
 def selected(request):
@@ -86,13 +86,14 @@ def logistic_classification(request):
     sausage = Sausage.from_file(bolt.sausages[idx], bolt.nbests[idx])
     ref = bolt.refs[idx]
     nbest = bolt.nbests[idx]
+    request.session['idx'] = idx
     request.session['sausage'] = sausage
     request.session['hyp'] = hyp
     request.session['ref'] = ref
     request.session['nbest'] = nbest
 
     # Classify in order to move on to the corresponding step
-    vector = create_feature_vector_logistic(hyp, sausage, nbest)
+    vector = logistic_vectors[idx] #create_feature_vector_logistic(hyp, sausage, nbest)
     result = ok_or_error(vector)[0]
 
     # Change this to correctly handle a numpy array
@@ -100,21 +101,22 @@ def logistic_classification(request):
         request.session['translated'] = hyp
         return HttpResponseRedirect(reverse('translation'))
     else:
-        return HttpResponseResirect(reverse('linear-regression'))
+        return HttpResponseRedirect(reverse('linear-regression'))
 
 
 def linear_regression(request):
     threshold = 4
+    idx = request.session['idx']
     hyp = request.session['hyp']
     sausage = request.session['sausage']
     nbest = request.session['nbest']
 
-    vector = create_feature_vector_linear(hyp, sausage, nbest)
+    vector = linear_vectors[idx] #create_feature_vector_linear(hyp, sausage, nbest)
     result = predicted_wer(vector)
 
     # Change this to correctly handle a numpy array
-    if result < threshold:
+    if result <= threshold:
         return HttpResponseRedirect(reverse('better-choice'))
     else:
         request.session['translated'] = hyp
-        return HttpResponseRedirect(revesre('translation'))
+        return HttpResponseRedirect(reverse('translation'))
