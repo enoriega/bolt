@@ -118,5 +118,5 @@ def linear_regression(request):
     if result <= threshold:
         return HttpResponseRedirect(reverse('better-choice'))
     else:
-        request.session['translated'] = hyp
-        return HttpResponseRedirect(reverse('translation'))
+        #request.session['translated'] = hyp
+        return HttpResponseRedirect(reverse('retype-ref'))

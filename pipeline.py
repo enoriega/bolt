@@ -14,6 +14,7 @@ with open('linear_regression_error_names.pickle', 'rb') as f:
 
 print 'Loading dataset ...'
 X = get_dataset().data
+J = X
 
 print 'Classifying data ...'
 y_pred = c1.predict(X)
