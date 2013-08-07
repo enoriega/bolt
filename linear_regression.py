@@ -16,18 +16,18 @@ X = []
 names = []
 
 for name, ref, hyp, sausage, lattice, nbest in zip(*read_output()):
-	if name in error_names:
-		names.append(name)
-		s = Sausage.from_file(sausage)
-		# Create feature vector
-		ascore, lscore, _ = read_nbest(nbest)[0]
-		hyp = get_tokens(hyp)
-		try:
-            		aligned_hyp, score = s.align_hyp(' '.join(hyp))
-        	except:
-            		continue    
-        	v = [lscore, score, len([t for t in aligned_hyp if t == delete_token]), len(hyp), 1.0/float(len(hyp))]
-		X.append(v)
+    if name in error_names:
+        names.append(name)
+        s = Sausage.from_file(sausage)
+        # Create feature vector
+        ascore, lscore, _ = read_nbest(nbest)[0]
+        hyp = get_tokens(hyp)
+        try:
+            aligned_hyp, score = s.align_hyp(' '.join(hyp))
+        except:
+            continue    
+        v = [lscore, score, len([t for t in aligned_hyp if t == delete_token]), len(hyp), 1.0/float(len(hyp))]
+        X.append(v)
 
 X = scale(np.array(X))
 

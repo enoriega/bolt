@@ -71,8 +71,8 @@ def get_dataset():
     hyps = []
     for name, ref, hyp, sausage, lattice, nbest in zip(*read_output()):
         # print name
-	names.append(name)
-	hyps.append(hyp)
+        names.append(name)
+        hyps.append(hyp)
         tag = int(ref != hyp)
         ref = get_tokens(ref)
         hyp = get_tokens(hyp)
@@ -108,25 +108,26 @@ def get_dataset_linear_regression(ids=None):
     skipped = 0
     for name, ref, hyp, sausage, lattice, nbest in zip(*read_output()):
 
-	if ids is not None and name not in ids:
+        if ids is not None and name not in ids:
             skipped += 1
             continue
 
         names.append(name)
-	hyps.append(hyp)
+        hyps.append(hyp)
         ref = get_tokens(ref)
-	#dirty_hyp = hyp.lower().split()
-  	hyp = get_tokens(hyp)
+        #dirty_hyp = hyp.lower().split()
+        hyp = get_tokens(hyp)
         sausage = Sausage.from_file(sausage)
         try:
             aligned_hyp, score = sausage.align_hyp(' '.join(hyp))
         except:
             continue    
-	#Add the WER to targets
-	target.append(WER(ref, hyp))
+        #Add the WER to targets
+        target.append(WER(ref, hyp))
         ascore, lscore, _ = read_nbest(nbest)[0]
         v = [lscore, score, len([t for t in aligned_hyp if t == delete_token]), len(hyp), 1.0/float(len(hyp))]
         data.append(v)
+
     data = scale(np.array(data))
     # data = np.array(data)
     target = np.array(target)

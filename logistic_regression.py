@@ -4,7 +4,7 @@ import pickle
 
 
 with open('logistic_regression.pickle', 'r') as f:
-	model = pickle.load(f)
+    model = pickle.load(f)
 
 data_set = pd.get_dataset()
 
@@ -16,4 +16,4 @@ error_hyps = data_set.hyps[y_pred.astype(bool)]
 ok_hyps = data_set.hyps[~y_pred.astype(bool)]
 
 if __name__ == '__main__':
-	print error_names, ok_names, error_hyps, ok_hyps
+    print error_names, ok_names, error_hyps, ok_hyps

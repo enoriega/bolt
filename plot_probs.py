@@ -18,26 +18,26 @@ def get_prob(n, names=None):
     count = 0
     total = 0
     for name, ref, hyp, sau_f, latt_f, nbest_f in zip(*read_output()):
-	if names is not None and name not in names:
-		continue
-        ref = ' '.join(get_tokens(ref))
-        total += 1
-        nbest = [' '.join(x[2]) for x in read_nbest(nbest_f)]
-        if ref in nbest[:n]:
-            count += 1
+        if names is not None and name not in names:
+            continue
+            ref = ' '.join(get_tokens(ref))
+            total += 1
+            nbest = [' '.join(x[2]) for x in read_nbest(nbest_f)]
+            if ref in nbest[:n]:
+                count += 1
     return count / total
 
 def get_counts(n, names=None):
     count = 0
     total = 0
     for name, ref, hyp, sau_f, latt_f, nbest_f in zip(*read_output()):
-	if names is not None and name not in names:
-		continue
-        ref = ' '.join(get_tokens(ref))
-        total += 1
-        nbest = [' '.join(x[2]) for x in read_nbest(nbest_f)]
-        if ref in nbest[:n]:
-            count += 1
+        if names is not None and name not in names:
+            continue
+            ref = ' '.join(get_tokens(ref))
+            total += 1
+            nbest = [' '.join(x[2]) for x in read_nbest(nbest_f)]
+            if ref in nbest[:n]:
+                count += 1
     return count
 
 
@@ -53,9 +53,9 @@ if __name__ == '__main__':
     probs = []
 
     if len(sys.argv) == 2:
-	names = fixable if sys.argv[1] == "fixable" else unfixable
+        names = fixable if sys.argv[1] == "fixable" else unfixable
     else:
-	 names = None
+        names = None
 
     for n in ns:
         print n

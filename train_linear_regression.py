@@ -25,4 +25,4 @@ print 'Explained variance:', explained_variance_score(y_test, y_pred), 'R^2 scor
 file_name = 'linear_regression.pickle' if ids is None else 'linear_regression_%s.pickle' % ids.split('.')[0]
 
 with open(file_name, 'w') as f:
-	pickle.dump(model, f)
+    pickle.dump(model, f)
