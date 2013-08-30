@@ -1,10 +1,12 @@
 from django.conf.urls import patterns, url
 
-from bolt import views
+from bolt import views, ok_index, error_index, m4_index, l4_index, index
 
 urlpatterns = patterns('',
-    url(r'^$', views.input, name='index'),
-    url(r'^input/*$', views.input, name='input'),
+    url(r'^$', views.input, {'index': index, 'name':'input'}, name='index'),
+    url(r'^input/*$', views.input, {'index': index, 'name':'input'}, name='input'),
+    url(r'^l4/*$', views.input, {'index': l4_index, 'name':'l4'}, name='l4'),
+    url(r'^m4/*$', views.input, {'index': m4_index, 'name':'m4'}, name='m4'),
     url(r'^better-choice/*$', views.better_choice, name='better-choice'),
     url(r'^selected/*$', views.selected, name='selected'),
     url(r'^retype/*$', views.retype_ref, name='retype-ref'),

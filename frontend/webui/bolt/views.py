@@ -8,41 +8,104 @@ from sausages import Sausage
 import bolt
 import json
 from classification import *
+from functions import persist_log
+from datetime import datetime
 import pdb
+import json
 
 def index(request):
     return HttpResponse("Hello, world!")
 
 def better_choice(request):
-    #refid = request.POST['refid']
-    #ref = request.POST['ref']
-    #hyp = request.POST['hyp']
+
+    # Log the transition
+    log = request.session['log']
+    entry = {}
+    entry['name'] = 'better choice'
+    entry['start_time'] = datetime.now()
+    log.append(entry)
+    request.session['log'] = log
+    ####
+
+    
     hyp = request.session['hyp']
     sausage = request.session['sausage']
     nbest = [' '.join(nb[2]) for nb in sausage.nbests]
+
+    # Log stuff
+    entry['nbest'] = nbest
+    ####
+
     return render(request, 'choice.html', {"hyp":hyp, "nbest":nbest})
 
 def retype_ref(request):
 
+    # Log
+    log = request.session['log']
+    ####
+
+
     if request.method == 'POST':
         form = RetypeForm(request.POST)
         if form.is_valid():
+            # Log
+            entry = log[-1]
+            entry['retyped'] = form.cleaned_data['sentence']
+            ####
+
             request.session['translated'] = form.cleaned_data['sentence']
             return HttpResponseRedirect(reverse('translation'))
     else:
+        # Log
+        entry = {}
+        entry['name'] = 'retype-ref'
+        entry['start_time'] = datetime.now()
+        log.append(entry)
+        request.session['log'] = log
+        ####
+
         form = RetypeForm()
     
         return render(request, 'retype.html', {'form':form})
 
 def translation(request):
-    hyp = request.session['translated']
-    return render(request, 'translation.html', {"hyp": hyp})
+    # Log
+    log = request.session['log']
+    entry = log[-1]
+    if 'end_time' not in entry:
+        entry['end_time'] = datetime.now()
+    ####
 
-def input(request):
-    data = { 'ref_num' : bolt.ref_num - 1}
+    hyp = request.session['translated']
+    # Write the log to the FS
+    persist_log(log)
+    #########################
+    action = reverse(request.session['initial_view'])
+    return render(request, 'translation.html', {"hyp": hyp, 'action':action})
+
+def input(request, index = None, name=None):
+    request.session.clear()
+    # Initialize the log entry
+    log = [] 
+    entry = {}
+    entry['name'] = 'input'
+    entry['start_time'] = datetime.now()
+    log.append(entry)
+    
+    request.session['log'] = log
+    #############################
+    request.session['initial_view'] = name
+
+    data = { 'ref_num' : bolt.ref_num - 1, 'index':json.dumps(index)}
     return render(request, 'input.html', data)
 
 def selected(request):
+    # Log the entry
+    log = request.session['log']
+    entry = log[-1]
+    entry['end_time'] = datetime.now()
+    ####
+
     try:
         action = request.POST['action']
         hyp = request.POST['hyp']
@@ -60,6 +123,13 @@ def selected(request):
             request.session['translated'] = hyp
             ret = HttpResponseRedirect(reverse('translation'))
             
+
+        # Log stuff
+        entry['action'] = action
+        if 'choice' in locals():
+            entry['choice'] = choice
+        ####
+
         return ret
         
     except KeyError:
@@ -81,6 +151,13 @@ def read_sausage(request, idx):
     return HttpResponse(json.dumps(ret))
 
 def logistic_classification(request):
+
+    # Update the last log entry
+    log = request.session['log']
+    entry = log[-1]
+    entry['end_time'] = datetime.now()
+    ####
+
     idx = int(request.POST['refid'])                                     
     hyp = bolt.hyps[idx]
     sausage = Sausage.from_file(bolt.sausages[idx], bolt.nbests[idx])
@@ -91,6 +168,11 @@ def logistic_classification(request):
     request.session['hyp'] = hyp
     request.session['ref'] = ref
     request.session['nbest'] = nbest
+
+    # Log stuff
+    entry['ref'] = ref
+    entry['hyp'] = hyp
+    ####
 
     # Classify in order to move on to the corresponding step
     vector = logistic_vectors[idx] #create_feature_vector_logistic(hyp, sausage, nbest)

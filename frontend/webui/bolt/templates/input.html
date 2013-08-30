@@ -9,9 +9,11 @@
         var refs = ["Ref 1", "Ref 2", "Ref 3", "Ref 4", "Ref 5"];
         var hyps = ["Hyp 1", "Hyp 2", "Hyp 3", "Hyp 4", "Hyp 5"];
         var ref_num = {{ ref_num }}
+        var index = {{ index }}
 
 
         function setVals(num){
+            num = index[num]
             $("#refid").val(num)
             url = '{% url 'read-sausage' 0 %}'
             url = url.replace('0', num);
@@ -31,7 +33,8 @@
                 setVals(num);       
             });
             $("#lucky").click(function(){
-                num = Math.floor((Math.random()*ref_num)+1);
+                //num = Math.floor((Math.random()*ref_num)+1);
+                num = Math.floor((Math.random()*index.length)+1);
                 setVals(num)
                 return false;
             })
