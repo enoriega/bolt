@@ -99,17 +99,17 @@ def get_regression_dataset(ids=None):
     names = []
     hyps = []
 
-    if ids is not None:
-        with open(ids, 'r') as f:
-            ids = pickle.load(f)
+    #if ids is not None:
+    #    with open(ids, 'r') as f:
+    #       ids = pickle.load(f)
 
  
     skipped = 0
     for name, ref, hyp, sausage, lattice, nbest in zip(*read_output()):
 
-        if ids is not None and name not in ids:
-            skipped += 1
-            continue
+        #if ids is not None and name not in ids:
+        #    skipped += 1
+        #    continue
 
         names.append(name)
         hyps.append(hyp)
@@ -124,7 +124,7 @@ def get_regression_dataset(ids=None):
         #Add the WER to targets
         target.append(WER(ref, hyp))
         ascore, lscore, _ = read_nbest(nbest)[0]
-        v = get_regression_feature_vector(hyp, aligned_hyp, score, lscore)
+        v = regression_feature_vector(hyp, aligned_hyp, score, lscore)
         data.append(v)
 
     data = scale(np.array(data))

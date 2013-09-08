@@ -23,11 +23,5 @@ with open('l4_index.pickle', 'rb') as f:
 
 index = range(ref_num)
 
-#Compute the feature vectors
-#print "Extracting the dataset for logistic regression"
-
-#bunch_logistic = get_dataset()
-
-#print "Extracting the dataset for linear regression"
-
-#bunch_linear = get_dataset_linear_regression()
+# This variable is an on/off switch for the models
+intelligence = False

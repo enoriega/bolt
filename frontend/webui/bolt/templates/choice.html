@@ -6,8 +6,12 @@
     <script type="text/javascript">
         $(document).ready(function(){
             
-            $("#ignore").click(function(){
-                $("#action").val("ignore");
+            $("#perfect").click(function(){
+                $("#action").val("perfect");
+            });
+
+            $("#close-enough").click(function(){
+                $("#action").val("close-enough");
             });
 
             $("#retype").click(function(){
@@ -20,6 +24,8 @@
 
             $("#choices").change(function(){
                 $("#select").removeAttr('disabled')
+                $("#perfect").removeAttr('disabled')
+                $("#close-enough").removeAttr('disabled')
             });
         });
     </script>
@@ -31,10 +37,10 @@
         <input type="hidden" name="action" id="action" />
         <input type="hidden" name="hyp" id="hyp" value="{{ hyp }}" />
      {% csrf_token %} 
-    <h3>Here is what I understood:</h3>
+    <!--<h3>Here is what I understood:</h3>-->
     <br />
     <p class="text-center text-error" style="font-size:1em">
-        {{ hyp }}
+        <!--{{ hyp }}-->
     </p>
     <br />
     <p class="lead text-center"><small>I believe there's something wrong though, please select the correct sentence from below or continue if necessary.</small></p>
@@ -52,11 +58,14 @@
 
     <div class="row">
         
-        <div class="span1 offset4">
-            <input type="submit" id="ignore" class="btn btn-large" value="Ignore" />
+        <div class="span2 offset3" style="margin-right:1em;">
+            <input type="submit" id="close-enough" disabled="disabled" class="btn btn-large" value="Close Enough" />
         </div>
-        <div class="span1">
-            <input type="submit" id="retype" class="btn btn-large" value="Retype" />
+        <div class="span1" style="margin-right:1em;">
+            <input type="submit" disabled="disabled" id="perfect" class="btn btn-large" value="Perfect" />
+        </div>
+        <div class="span1" style="margin-right:1em;">
+            <input type="submit"  id="retype" class="btn btn-large" value="Retype" />
         </div>
         <div class="span1">
             <input type="submit" id="select" disabled="disabled" class="btn btn-primary btn-large" value="Select" />

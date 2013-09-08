@@ -18,6 +18,14 @@
 <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("#abort").click(function(){
+                window.location.href = "{% url 'input' %}";
+                return false;
+            });
+        });
+    </script>
     {% bootstrap_javascript_tag %}
     {% block extra_head %}{% endblock %}
   </head>
@@ -40,14 +48,15 @@
               <li><a href="#contact">Contact</a></li>
             </ul>
           </div>--><!--/.nav-collapse -->
+          <a href="{% url 'input' %}" class="brand" style="float:right; color:red;">Exit</a>
         </div>
       </div>
     </div>
 
     <div class="container">
 
+    <div style="float:right"><img src="http://icons.iconarchive.com/icons/visualpharm/icons8-metro-style/48/Phones-Speaker-icon.png" /></div>
     {% bootstrap_messages %}
-
     {% block content %}Empty page{% endblock %}
 
     </div> <!-- /container -->

@@ -16,7 +16,7 @@ X = c_dataset.data
 y_pred = classificator.predict(X)
 err_idx = y_pred.astype(bool)
 
-ids_ok, ids_err = [i for i in range(X.shape[0]) if err_idx[i] == False], [i for i in range(X.shape[0] if err_idx[i] == True]
+ids_ok, ids_err = [i for i in range(X.shape[0]) if err_idx[i] == False], [i for i in range(X.shape[0]) if err_idx[i] == True]
 
 for ids, file_name in zip([ids_ok, ids_err], [OK_REGRESSION_FILE_NAME, ERROR_REGRESSION_FILE_NAME]):
 

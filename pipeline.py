@@ -1,49 +1,47 @@
-from prepare_dataset_sxs import get_dataset, get_dataset_linear_regression
-from plot_probs import get_counts
 import pickle
+from bolt_learning import CLASSIFICATOR_FILE_NAME, OK_REGRESSION_FILE_NAME, ERROR_REGRESSION_FILE_NAME
+from bolt_learning.features import get_classification_dataset, get_regression_dataset
 
-print 'Loading classifiers ...'
-with open('logistic_regression.pickle', 'rb') as f:
-    c1 = pickle.load(f)
+# Load the models
+with open(CLASSIFICATOR_FILE_NAME, 'rb') as f:
+    classificator = pickle.load(f)
 
-with open('linear_regression_ok_names.pickle', 'rb') as f:
-    reg_ok = pickle.load(f)
+with open(OK_REGRESSION_FILE_NAME, 'rb') as f:
+    ok_regression = pickle.load(f)
 
-with open('linear_regression_error_names.pickle', 'rb') as f:
-    reg_err = pickle.load(f)
 
-print 'Loading dataset ...'
-X = get_dataset().data
-J = X
+with open(ERROR_REGRESSION_FILE_NAME, 'rb') as f:
+    error_regression = pickle.load(f)
+
+# Perform classification
+print 'Loading classificarion dataset ...'
+X = get_classification_dataset().data
 
 print 'Classifying data ...'
-y_pred = c1.predict(X)
+y_pred = classificator.predict(X)
 
 err_idx = y_pred.astype(bool)
 print 'OK:', X[~err_idx].shape[0], 'Error:', X[err_idx].shape[0]
 
-print 'Loading dataset again ...'
-bunch = get_dataset_linear_regression()
-X = bunch.data
+ids_ok, ids_err = [i for i in range(X.shape[0]) if err_idx[i] == False], [i for i in range(X.shape[0]) if err_idx[i] == True]
 
-X_ok = X[~err_idx]
-X_err = X[err_idx]
+print 'Loading regression datasets ...'
+X_ok = get_regression_dataset(ids_ok)
+X_err = get_regression_dataset(ids_err)
 
 
 print 'Regression on X_ok ...'
-y_pred_ok = reg_ok.predict(X_ok)
+y_pred_ok = ok_regression.predict(X_ok.data)
 
 print 'Regression on X_err ...'
-y_pred_err = reg_err.predict(X_err)
+y_pred_err = error_regression.predict(X_err.data)
 
 print 'Pred ok > 2:', y_pred_ok[y_pred_ok > 2].shape[0], 'Pred ok <= 2:', y_pred_ok[y_pred_ok <= 2].shape[0]
-
-print y_pred_ok
 
 
 print 'Pred err > 4:', y_pred_err[y_pred_err > 4].shape[0], 'Pred err <= 4:', y_pred_err[y_pred_err <= 4].shape[0]
 
-print 'Mean WER pred ok > 2:', bunch.target[y_pred_ok > 2].mean(), 'Mean WER pred ok <= 2:', bunch.target[y_pred_ok <=2].mean()
-print 'Mean WER pred err > 4:', bunch.target[y_pred_err > 4].mean(), 'Mean WER pred err <= 4:', bunch.target[y_pred_err <=4].mean()
+print 'Mean WER pred ok > 2:', X_ok.target[y_pred_ok > 2].mean(), 'Mean WER pred ok <= 2:', X_ok.target[y_pred_ok <=2].mean()
+print 'Mean WER pred err > 4:', X_err.target[y_pred_err > 4].mean(), 'Mean WER pred err <= 4:', X_err.target[y_pred_err <=4].mean()
 
-print 'No. of refs in nbest for pred err <= 4:', get_counts(5, bunch.names[y_pred_err <=4]), 'out of', y_pred_err[y_pred_err <= 4].shape[0] 
+#print 'No. of refs in nbest for pred err <= 4:', get_counts(5, bunch.names[y_pred_err <=4]), 'out of', y_pred_err[y_pred_err <= 4].shape[0] 

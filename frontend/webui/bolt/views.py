@@ -12,6 +12,7 @@ from functions import persist_log
 from datetime import datetime
 import pdb
 import json
+from bolt import intelligence
 
 def index(request):
     return HttpResponse("Hello, world!")
@@ -30,10 +31,10 @@ def better_choice(request):
     
     hyp = request.session['hyp']
     sausage = request.session['sausage']
-    nbest = [' '.join(nb[2]) for nb in sausage.nbests]
+    nbest = [' '.join(nb[2]) for nb in sausage.nbests][:4]
 
     # Log stuff
-    entry['nbest'] = nbest
+    #entry['nbest'] = nbest
     ####
 
     return render(request, 'choice.html', {"hyp":hyp, "nbest":nbest})
@@ -119,7 +120,7 @@ def selected(request):
             ret = HttpResponseRedirect(reverse('translation'))
         elif action == 'retype':
             ret = HttpResponseRedirect(reverse('retype-ref'))
-        elif action == 'ignore':
+        elif action in ('perfect', 'close-enough'):
             request.session['translated'] = hyp
             ret = HttpResponseRedirect(reverse('translation'))
             
@@ -168,22 +169,33 @@ def logistic_classification(request):
     request.session['hyp'] = hyp
     request.session['ref'] = ref
     request.session['nbest'] = nbest
+    request.session['input-action'] = request.POST['action']
 
     # Log stuff
     entry['ref'] = ref
     entry['hyp'] = hyp
+    entry['index'] = idx
+    entry['id'] = bolt.names[idx]
+    entry['action'] = request.session['input-action']
     ####
 
-    # Classify in order to move on to the corresponding step
-    vector = logistic_vectors[idx] #create_feature_vector_logistic(hyp, sausage, nbest)
-    result = ok_or_error(vector)[0]
-
-    # Change this to correctly handle a numpy array
-    if result == 0:
+    if request.session['input-action'] in ('classification',): 
+        if intelligence:
+            # Classify in order to move on to the corresponding step
+            vector = logistic_vectors[idx] #create_feature_vector_logistic(hyp, sausage, nbest)
+            result = ok_or_error(vector)[0]
+        
+            # Change this to correctly handle a numpy array
+            if result == 0:
+                request.session['translated'] = hyp
+                return HttpResponseRedirect(reverse('translation'))
+            else:
+                return HttpResponseRedirect(reverse('linear-regression'))
+        else:
+            return HttpResponseRedirect(reverse('better-choice'))
+    else:
         request.session['translated'] = hyp
         return HttpResponseRedirect(reverse('translation'))
-    else:
-        return HttpResponseRedirect(reverse('linear-regression'))
 
 
 def linear_regression(request):

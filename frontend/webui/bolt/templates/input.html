@@ -24,6 +24,8 @@
                 $("#hyp-hidden").val(data.hyp)
                 $("#hidder").css('display', 'block')
                 $("#continue").removeAttr("disabled")
+                $("#close-enough").removeAttr("disabled")
+                $("#perfect").removeAttr("disabled")
             });
         }
 
@@ -38,6 +40,16 @@
                 setVals(num)
                 return false;
             })
+
+
+            $("#close-enough").click(function(){
+                $("#input-action").val("close-enough");
+            });
+
+            $("#perfect").click(function(){
+                $("#input-action").val("perfect");
+            });
+            
         });
     </script>
 
@@ -49,7 +61,7 @@
 
     <br />
     <br />
-    <form class="form-inline controls" method="post" action="{% url 'logistic-classification' %}">
+    <form class="form-inline controls" id="form" method="post" action="{% url 'logistic-classification' %}">
      {% csrf_token %} 
     <div class="row">
         <div class="offset2">
@@ -59,6 +71,7 @@
                 <div class="input-append">
                     <input id="ref" name="ref" type="text" class="input-xxlarge" disabled="disabled"></input>
                     <input type="hidden" name="hyp" id="hyp-hidden" />
+                    <input name="action" id="input-action" type="hidden" value="classification" />
                     <button id="lucky" class="btn">I'm feeling lucky</buton>
                 </div>
 
@@ -80,7 +93,13 @@
     <br />
     </div>
     <div class="row">
-        <div class="span2 offset5">
+        <div class="span1 offset4" style="margin-right:1em;">
+            <button id="close-enough" disabled="disabled" class="btn btn-large">Close enough</button>
+        </div>
+        <div class="span1" style="margin-right:1em">
+            <button id="perfect" disabled="disabled" class="btn btn-large">Perfect</button>
+        </div>
+        <div class="span1">
             <button disabled="disabled" id="continue" class="btn btn-primary btn-large">Continue</button>
         </div>
     </div>
