@@ -13,6 +13,7 @@ from datetime import datetime
 import pdb
 import json
 from bolt import intelligence
+from bolt.templatetags.bolt_tags import filter_refhyp
 
 def index(request):
     return HttpResponse("Hello, world!")
@@ -31,13 +32,14 @@ def better_choice(request):
     
     hyp = request.session['hyp']
     sausage = request.session['sausage']
+    wav = request.session['wav']
     nbest = [' '.join(nb[2]) for nb in sausage.nbests][:4]
 
     # Log stuff
     #entry['nbest'] = nbest
     ####
 
-    return render(request, 'choice.html', {"hyp":hyp, "nbest":nbest})
+    return render(request, 'choice.html', {"hyp":hyp, "nbest":nbest, 'wav':wav})
 
 def retype_ref(request):
 
@@ -66,8 +68,9 @@ def retype_ref(request):
         ####
 
         form = RetypeForm()
+        wav = request.session['wav']
     
-        return render(request, 'retype.html', {'form':form})
+        return render(request, 'retype.html', {'form':form, 'wav':wav})
 
 def translation(request):
     # Log
@@ -76,13 +79,14 @@ def translation(request):
     if 'end_time' not in entry:
         entry['end_time'] = datetime.now()
     ####
+    wav = request.session['wav']
 
     hyp = request.session['translated']
     # Write the log to the FS
     persist_log(log)
     #########################
     action = reverse(request.session['initial_view'])
-    return render(request, 'translation.html', {"hyp": hyp, 'action':action})
+    return render(request, 'translation.html', {"hyp": hyp, 'action':action, 'wav':wav})
 
 def input(request, index = None, name=None):
     request.session.clear()
@@ -115,12 +119,12 @@ def selected(request):
         if len(choices) > 0:
             choice = request.POST.getlist('choices')[0]
         
-        if action == 'translation':
+        if action == 'close-enough':
             request.session['translated'] = choice
             ret = HttpResponseRedirect(reverse('translation'))
         elif action == 'retype':
             ret = HttpResponseRedirect(reverse('retype-ref'))
-        elif action in ('perfect', 'close-enough'):
+        elif action in ('perfect',):
             request.session['translated'] = hyp
             ret = HttpResponseRedirect(reverse('translation'))
             
@@ -143,11 +147,13 @@ def read_sausage(request, idx):
     ref = bolt.refs[idx]
     hyp = bolt.hyps[idx]
     nbest = bolt.nbests[idx]
+    wav = bolt.wavs[idx]
     request.session['sausage'] = sausage
     request.session['hyp'] = hyp
     request.session['ref'] = ref
     request.session['nbest'] = nbest
-    ret = {'ref': ref, 'hyp' : hyp }
+    request.session['wav'] = wav
+    ret = {'ref': filter_refhyp(ref), 'hyp' : filter_refhyp(hyp), 'wav':wav }
 
     return HttpResponse(json.dumps(ret))
 
@@ -179,7 +185,7 @@ def logistic_classification(request):
     entry['action'] = request.session['input-action']
     ####
 
-    if request.session['input-action'] in ('classification',): 
+    if request.session['input-action'] in ('fix',): 
         if intelligence:
             # Classify in order to move on to the corresponding step
             vector = logistic_vectors[idx] #create_feature_vector_logistic(hyp, sausage, nbest)

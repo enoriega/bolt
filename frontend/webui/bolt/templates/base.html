@@ -1,4 +1,6 @@
 {% load bootstrap_toolkit %}
+{% load bolt_tags %}
+{% load staticfiles %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -55,7 +57,16 @@
 
     <div class="container">
 
-    <div style="float:right"><img src="http://icons.iconarchive.com/icons/visualpharm/icons8-metro-style/48/Phones-Speaker-icon.png" /></div>
+    <div style="margin-left:auto; margin-right:auto; width:120px">
+    <audio id="player" controls>
+        {% if wav %}
+        <source id="audiosrc" src="{% static wav  %}" />
+        {% else %}
+        <source id="audiosrc" />
+        {% endif %}
+    </audio>
+    <!--<img src="http://icons.iconarchive.com/icons/visualpharm/icons8-metro-style/48/Phones-Speaker-icon.png" />-->
+    </div>
     {% bootstrap_messages %}
     {% block content %}Empty page{% endblock %}
 

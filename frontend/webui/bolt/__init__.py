@@ -1,9 +1,7 @@
-from boltdata import read_output
-from prepare_dataset_sxs import get_dataset, get_dataset_linear_regression
+from bolt_learning.data import read_output
 import pickle
-
 # Read the information
-names, refs, hyps, sausages, lattices, nbests = read_output()
+names, refs, hyps, sausages, lattices, nbests, wavs = read_output()
 
 #Number of refs
 ref_num = len(refs)
