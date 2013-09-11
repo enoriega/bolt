@@ -7,5 +7,5 @@ register = template.Library()
 @stringfilter
 def filter_refhyp(value):
     '''Filters a ref/hyp string and returns the human friendly representation'''   
-    return value.lower().replace('*', '')
+    return value.lower().replace('*', '').replace('uh', '').replace('uhm', '').replace('ah', '').replace('ahm', '')
 

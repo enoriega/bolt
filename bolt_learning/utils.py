@@ -10,7 +10,7 @@ def get_tokens(s):
 def get_counts(n, names=None):
     count = 0
     total = 0
-    for name, ref, hyp, sau_f, latt_f, nbest_f in zip(*read_output()):
+    for name, ref, hyp, sau_f, latt_f, nbest_f, wav_f in zip(*read_output()):
         if names is not None and name not in names:
             continue
             ref = ' '.join(get_tokens(ref))

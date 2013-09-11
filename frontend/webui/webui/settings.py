@@ -72,6 +72,8 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+    '/home/ubuntu/bolten/arizona_recognizer_test/wav',
+    '/bolten/arizona_recognizer_test/',
 )
 
 # List of finder classes that know how to find static files in

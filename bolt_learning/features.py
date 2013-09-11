@@ -64,7 +64,7 @@ def get_classification_dataset():
     data = []
     names = []
     hyps = []
-    for name, ref, hyp, sausage, lattice, nbest in zip(*read_output()):
+    for name, ref, hyp, sausage, lattice, nbest, wav in zip(*read_output()):
         # print name
         names.append(name)
         hyps.append(hyp)
@@ -105,7 +105,7 @@ def get_regression_dataset(ids=None):
 
  
     skipped = 0
-    for name, ref, hyp, sausage, lattice, nbest in zip(*read_output()):
+    for name, ref, hyp, sausage, lattice, nbest, wav in zip(*read_output()):
 
         #if ids is not None and name not in ids:
         #    skipped += 1

@@ -6,23 +6,23 @@
     
     <script type="text/javascript">
         var ids = [1, 2, 3, 4, 5];
-        var refs = ["Ref 1", "Ref 2", "Ref 3", "Ref 4", "Ref 5"];
-        var hyps = ["Hyp 1", "Hyp 2", "Hyp 3", "Hyp 4", "Hyp 5"];
         var ref_num = {{ ref_num }}
         var index = {{ index }}
 
 
         function setVals(num){
+            idx = num
             num = index[num]
-            $("#refid").val(num)
+            $("#refid").val(idx)
             url = '{% url 'read-sausage' 0 %}'
             url = url.replace('0', num);
             $.ajax(url).done(function(data){
                 data = JSON.parse(data)
                 $("#ref").val(data.ref)
+                $("#ref-label").text(data.ref)
                 $("#hyp").text(data.hyp)
                 $("#hyp-hidden").val(data.hyp)
-                $("#hidder").css('display', 'block')
+                $(".hidder").css('display', 'block')
                 $("#continue").removeAttr("disabled")
                 $("#close-enough").removeAttr("disabled")
                 $("#perfect").removeAttr("disabled")
@@ -35,9 +35,10 @@
         }
 
         $(document).ready(function(){
-            $("#refid").focusout(function(){
-                num = $(this).val()
+            $("#select").click(function(){
+                num = $("#refid").val()
                 setVals(num);       
+                return false;
             });
             $("#lucky").click(function(){
                 //num = Math.floor((Math.random()*ref_num)+1);
@@ -65,24 +66,33 @@
 {% endblock %}
 
 {% block content %}
-
-    <h1>Imagine you said this:</h1>
-
-    <br />
-    <br />
+<br />
+<br />
     <form class="form-inline controls" id="form" method="post" action="{% url 'logistic-classification' %}">
+    <p style="text-align:center">
+    <span class="lead">Pick a sentence:</span>
+    <br /><br />
+    <label style="display:inline" for="refid">Ref #:&nbsp;<input style="display:inline" placeholder="0-{{ref_num}}" class="input-mini" id="refid" name="refid" type="text" maxlength="5" /></label>
+    <button id="select" style="margin-bottom:0px" class="btn">Select</button>
+    <button id="lucky" style="margin-bottom:0px" class="btn">Select a random sentence</button>
+    </p>
+
+    <br />
+    <br />
      {% csrf_token %} 
-    <div class="row">
-        <div class="offset2">
+     <div class="row">
+     </div>
+    <div class="hidder" style="display:none">
+    <p class="lead" style="text-align:center">Here is what you said:</p>
+        <div  style="text-align:center">
             
                 
-                <label style="display:inline" for="refid">Ref #:&nbsp;<input style="display:inline" placeholder="0-{{ref_num}}" class="input-mini" id="refid" name="refid" type="text" maxlength="5" /></label>
-                <div class="input-append">
-                    <input id="ref" name="ref" type="text" class="input-xxlarge" disabled="disabled"></input>
+                <!--<div class="input-append">-->
+                    <input id="ref" name="ref" type="hidden" disabled="disabled"></input>
                     <input type="hidden" name="hyp" id="hyp-hidden" />
                     <input name="action" id="input-action" type="hidden" value="classification" />
-                    <button id="lucky" class="btn">I'm feeling lucky</buton>
-                </div>
+                    <span style="color:green" id="ref-label"></span>
+                <!--</div>-->
 
 
                 <br />
@@ -94,18 +104,19 @@
         
     </div>
     <br />
-    <div id="hidder" style="display:none">
+    <div class="hidder" style="display:none">
     <p class="lead" style="margin-left:auto; margin-right:auto; width:9em">Here is what I heard:</p>
 
     <p class="text-center text-info" style="font-size:1em" id="hyp">This is the hyp for the ref</p>
     <br />
     <br />
     </div>
+    <p class="lead hidder" style="text-align:center; display:none">What do you want to do?</p>
     <div class="row">
-        <div class="span1 offset4" style="margin-right:1em;">
+        <div class="span2 offset4" style="margin-right:0em;">
             <button id="close-enough" disabled="disabled" class="btn btn-large">Close enough</button>
         </div>
-        <div class="span1" style="margin-right:1em">
+        <div class="span1" style="margin-right:1em; margin-left:0">
             <button id="perfect" disabled="disabled" class="btn btn-large">Perfect</button>
         </div>
         <div class="span1">

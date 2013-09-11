@@ -100,8 +100,7 @@ def input(request, index = None, name=None):
     request.session['log'] = log
     #############################
     request.session['initial_view'] = name
-
-    data = { 'ref_num' : bolt.ref_num - 1, 'index':json.dumps(index)}
+    data = { 'ref_num' : len(index)- 1, 'index':json.dumps(index)}
     return render(request, 'input.html', data)
 
 def selected(request):
@@ -125,7 +124,7 @@ def selected(request):
         elif action == 'retype':
             ret = HttpResponseRedirect(reverse('retype-ref'))
         elif action in ('perfect',):
-            request.session['translated'] = hyp
+            request.session['translated'] = choice
             ret = HttpResponseRedirect(reverse('translation'))
             
 
