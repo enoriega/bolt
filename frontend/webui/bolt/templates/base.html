@@ -26,7 +26,13 @@
                 window.location.href = "{% url 'input' %}";
                 return false;
             });
+
+
         });
+
+            $(window).on('onbeforeunload', function(){
+                return "Plese use the exit link on the top right corner to leave";
+            })
     </script>
     {% bootstrap_javascript_tag %}
     {% block extra_head %}{% endblock %}
@@ -50,7 +56,7 @@
               <li><a href="#contact">Contact</a></li>
             </ul>
           </div>--><!--/.nav-collapse -->
-          <a href="{% url 'input' %}" class="brand" style="float:right; color:red;">Exit</a>
+          <a href="{% url initial_view %}" class="brand" style="float:right; color:red;">Exit</a>
         </div>
       </div>
     </div>
@@ -60,7 +66,8 @@
     <div style="margin-left:auto; margin-right:auto; width:120px">
     <audio id="player" controls>
         {% if wav %}
-        <source id="audiosrc" src="{% static wav  %}" />
+        <!--<source id="audiosrc" src="http://vision.sista.arizona.edu/bolt/static/{{ wav }}" />-->
+        <source id="audiosrc" src="{% static wav %}" />
         {% else %}
         <source id="audiosrc" />
         {% endif %}

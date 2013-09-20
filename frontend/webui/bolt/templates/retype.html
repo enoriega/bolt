@@ -2,16 +2,32 @@
 
 {% load bootstrap_toolkit %}
 
+    
+{% block extra_head %}
+    <script type="text/javascript">
+    $(document).ready(function(){
+        $("#id_sentence").keypress(function(){
+            if($(this).val().length > 1){
+                $("#submit").removeAttr("disabled");
+            }
+            else{
+                $("#submit").attr("disabled", "disabled");
+            }
+        });
+    });
+    </script>
+{% endblock %}
+
 {% block content %}
 
-    <h4>Please type again what you meant:</h4>
     <br />
+    <p class="lead text-center">Please type again what you meant:</p>
     <form method="post" >
     {% csrf_token %}
         <div style="text-align:center">
             <span style="display:inline">{{ form.sentence| as_bootstrap }}</span>
 
-            <input type="submit" value="Continue" class="btn btn-primary" />
+            <input type="submit" id="submit" disabled="disabled" value="Continue" class="btn btn-primary" />
         </div>
     </form>
 

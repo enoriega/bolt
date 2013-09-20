@@ -8,15 +8,13 @@ from sausages import Sausage
 import bolt
 import json
 from classification import *
-from functions import persist_log
+from functions import persist_log, close_log_entry
 from datetime import datetime
 import pdb
 import json
 from bolt import intelligence
 from bolt.templatetags.bolt_tags import filter_refhyp
 
-def index(request):
-    return HttpResponse("Hello, world!")
 
 def better_choice(request):
 
@@ -39,14 +37,13 @@ def better_choice(request):
     #entry['nbest'] = nbest
     ####
 
-    return render(request, 'choice.html', {"hyp":hyp, "nbest":nbest, 'wav':wav})
+    return render(request, 'choice.html', {"hyp":hyp, "nbest":nbest, 'wav':wav, 'initial_view':request.session['initial_view']})
 
 def retype_ref(request):
 
     # Log
     log = request.session['log']
     ####
-
 
     if request.method == 'POST':
         form = RetypeForm(request.POST)
@@ -60,6 +57,10 @@ def retype_ref(request):
             return HttpResponseRedirect(reverse('translation'))
     else:
         # Log
+        prev_entry = log[-1]
+        prev_entry['end_time'] = datetime.now()
+        prev_entry['action'] = 'retype'
+
         entry = {}
         entry['name'] = 'retype-ref'
         entry['start_time'] = datetime.now()
@@ -70,8 +71,9 @@ def retype_ref(request):
         form = RetypeForm()
         wav = request.session['wav']
     
-        return render(request, 'retype.html', {'form':form, 'wav':wav})
+        return render(request, 'retype.html', {'form':form, 'wav':wav, 'initial_view':request.session['initial_view']})
 
+#@close_log_entry('retype-ref')
 def translation(request):
     # Log
     log = request.session['log']
@@ -86,7 +88,7 @@ def translation(request):
     persist_log(log)
     #########################
     action = reverse(request.session['initial_view'])
-    return render(request, 'translation.html', {"hyp": hyp, 'action':action, 'wav':wav})
+    return render(request, 'translation.html', {"hyp": hyp, 'action':action, 'wav':wav, 'initial_view':request.session['initial_view']})
 
 def input(request, index = None, name=None):
     request.session.clear()
@@ -100,9 +102,10 @@ def input(request, index = None, name=None):
     request.session['log'] = log
     #############################
     request.session['initial_view'] = name
-    data = { 'ref_num' : len(index)- 1, 'index':json.dumps(index)}
+    data = { 'ref_num' : len(index)- 1, 'index':json.dumps(index), 'initial_view':request.session['initial_view']}
     return render(request, 'input.html', data)
 
+#@close_log_entry('better choice')
 def selected(request):
     # Log the entry
     log = request.session['log']
@@ -113,10 +116,13 @@ def selected(request):
     try:
         action = request.POST['action']
         hyp = request.POST['hyp']
-        choices = request.POST.getlist('choices')
+        #choices = request.POST.getlist('choices')
         
-        if len(choices) > 0:
-            choice = request.POST.getlist('choices')[0]
+        #if len(choices) > 0:
+            # This line is for the select list, now we use radio buttons
+            #choice = request.POST.getlist('choices')[0]
+        if 'choices' in request.POST:
+            choice = request.POST['choices']
         
         if action == 'close-enough':
             request.session['translated'] = choice
@@ -152,10 +158,11 @@ def read_sausage(request, idx):
     request.session['ref'] = ref
     request.session['nbest'] = nbest
     request.session['wav'] = wav
-    ret = {'ref': filter_refhyp(ref), 'hyp' : filter_refhyp(hyp), 'wav':wav }
+    ret = {'ref': filter_refhyp(ref), 'hyp' : filter_refhyp(hyp), 'wav':wav, 'initial_view':request.session['initial_view'] }
 
     return HttpResponse(json.dumps(ret))
 
+#@close_log_entry('input')
 def logistic_classification(request):
 
     # Update the last log entry

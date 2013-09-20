@@ -18,7 +18,7 @@
                 $("#action").val("retype");
             });
 
-            $("#choices").change(function(){
+            $(".choices").change(function(){
                 $("#perfect").removeAttr('disabled')
                 $("#close-enough").removeAttr('disabled')
             });
@@ -42,15 +42,20 @@
     
     <div class="row">
         <div class="span8 offset2">
-            <select multiple="multiple" id="choices" name="choices" style="width:100%; min-heigth:4000px; font-size:1em">
+            <!--<select multiple="multiple" id="choices" name="choices" style="width:100%; min-heigth:4000px; font-size:1em">-->
                 {% for item in nbest %}
-                    <option style="color:green; margin-bottom:5px">{{ item }}</option>
-                {% endfor %}
-            </select>
+                    <!--<option style="color:green; margin-bottom:5px">{{ item }}</option>-->
+                    <input type="radio" style="color:green; margin-bottom:5px"  class="choices" name="choices" value="{{item}}"><span style="color:green; margin-left:1em">{{ item }}</span></input><br /><br />
+                    {% endfor %}
+                <!--</select>-->
         </div>
         
+</div>
+<br />
+    <div class="row" style="text-align:center;">
+        If the correct sentence is not similar to what's shown above, click <b>Retype</b>, otherwise select one of the following actions:
     </div>
-
+    <br />
     <div class="row">
         
         <div class="span1 offset4" style="margin-right:1em;">
