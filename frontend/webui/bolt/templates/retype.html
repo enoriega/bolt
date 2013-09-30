@@ -21,13 +21,13 @@
 {% block content %}
 
     <br />
-    <p class="lead text-center">Please type again what you meant:</p>
+    <p class="lead text-center">Type in the text you hear in the clip:</p>
     <form method="post" >
     {% csrf_token %}
         <div style="text-align:center">
             <span style="display:inline">{{ form.sentence| as_bootstrap }}</span>
 
-            <input type="submit" id="submit" disabled="disabled" value="Continue" class="btn btn-primary" />
+            <input type="submit" id="submit" disabled="disabled" value="Submit" class="btn" />
         </div>
     </form>
 

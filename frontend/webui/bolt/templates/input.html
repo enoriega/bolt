@@ -44,6 +44,7 @@
                 //num = Math.floor((Math.random()*ref_num)+1);
                 num = Math.floor((Math.random()*index.length)+1);
                 setVals(num)
+                $(this).css("display", "none");
                 return false;
             })
 
@@ -70,11 +71,11 @@
 <br />
     <form class="form-inline controls" id="form" method="post" action="{% url 'logistic-classification' %}">
     <p style="text-align:center">
-    <span class="lead">Pick a sentence:</span>
-    <br /><br />
+    <!--<span class="lead">Pick a sentence:</span>
+    <br /><br />-->
     <label style="display:none" for="refid">Ref #:&nbsp;<input style="display:inline" placeholder="0-{{ref_num}}" class="input-mini" id="refid" name="refid" type="text" maxlength="5" /></label>
     <!--<button id="select" style="margin-bottom:0px" class="btn">Select</button>-->
-    <button id="lucky" style="margin-bottom:0px" class="btn">Select a random sentence</button>
+    <button id="lucky" style="margin-bottom:0px" class="btn">Start experiment</button>
     </p>
 
     <br />
@@ -83,7 +84,7 @@
      <div class="row">
      </div>
     <div class="hidder" style="display:none">
-    <p class="lead" style="text-align:center">Here is what you said:</p>
+    <!--<p class="lead" style="text-align:center">Here is what you said:</p>-->
         <div  style="text-align:center">
             
                 
@@ -91,7 +92,7 @@
                     <input id="ref" name="ref" type="hidden" disabled="disabled"></input>
                     <input type="hidden" name="hyp" id="hyp-hidden" />
                     <input name="action" id="input-action" type="hidden" value="classification" />
-                    <span style="color:green" id="ref-label"></span>
+                    <!--<span style="color:green" id="ref-label"></span>-->
                 <!--</div>-->
 
 
@@ -120,7 +121,7 @@
             <button id="perfect" disabled="disabled" class="btn btn-large">Perfect</button>
         </div>
         <div class="span1">
-            <button disabled="disabled" id="continue" class="btn btn-primary btn-large">Fix</button>
+            <button disabled="disabled" id="continue" class="btn btn-large">Fix</button>
         </div>
     </div>
     </form>

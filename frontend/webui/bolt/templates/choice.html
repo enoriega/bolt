@@ -38,7 +38,7 @@
         <!--{{ hyp }}-->
     </p>
     <br />
-    <p class="lead text-center"><small>I believe there's something wrong though, please select the correct sentence from below or continue if necessary.</small></p>
+    <p class="lead text-center"><small>Please select one of the options below, if it is suitable, and then click <b>Perfect</b> or <b>Close enough</b>. If the correct sentence is not similar to one of these options, click the <b>Retype</b> button.</small></p>
     
     <div class="row">
         <div class="span8 offset2">
@@ -52,20 +52,23 @@
         
 </div>
 <br />
-    <div class="row" style="text-align:center;">
+    <!--<div class="row" style="text-align:center;">
         If the correct sentence is not similar to what's shown above, click <b>Retype</b>, otherwise select one of the following actions:
-    </div>
+    </div>-->
     <br />
     <div class="row">
         
+
+
+
         <div class="span1 offset4" style="margin-right:1em;">
-            <input type="submit"  id="retype" class="btn btn-large" value="Retype" />
-        </div>
-        <div class="span1" style="margin-right:1em;">
             <input type="submit" disabled="disabled" id="perfect" class="btn btn-large" value="Perfect" />
         </div>
-        <div class="span1">
-            <input type="submit" id="close-enough" disabled="disabled" class="btn btn-primary btn-large" value="Close enough" />
+        <div class="span2">
+            <input type="submit" id="close-enough" disabled="disabled" class="btn btn-large" value="Close enough" />
+        </div>
+        <div class="span1" style="margin-right:1em; margin-left:-1em;">
+            <input type="submit"  id="retype" class="btn btn-large" value="Retype" />
         </div>
     </div>
     </form>

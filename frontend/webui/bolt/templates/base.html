@@ -56,7 +56,7 @@
               <li><a href="#contact">Contact</a></li>
             </ul>
           </div>--><!--/.nav-collapse -->
-          <a href="{% url initial_view %}" class="brand" style="float:right; color:red;">Exit</a>
+          <a href="{% url 'exit' %}" class="brand" style="float:right; color:red;">Exit</a>
         </div>
       </div>
     </div>
@@ -64,7 +64,7 @@
     <div class="container">
 
     <div style="margin-left:auto; margin-right:auto; width:120px">
-    <audio id="player" controls>
+    <audio id="player" controls style="margin-left:-2.5em;">
         {% if wav %}
         <!--<source id="audiosrc" src="http://vision.sista.arizona.edu/bolt/static/{{ wav }}" />-->
         <source id="audiosrc" src="{% static wav %}" />

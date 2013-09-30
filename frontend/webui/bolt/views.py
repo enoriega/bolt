@@ -226,3 +226,6 @@ def linear_regression(request):
     else:
         #request.session['translated'] = hyp
         return HttpResponseRedirect(reverse('retype-ref'))
+
+def exit(request):
+    return render(request, "exit.html", {'action':request.session['initial_view']})

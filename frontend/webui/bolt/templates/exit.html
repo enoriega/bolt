@@ -5,14 +5,14 @@
 {% block content %}
 
     <br />
-    <p class="lead text-center">The following sentence goes to translation</p>
+    <p class="lead text-center">Experiment stopped</p>
 
     <p class="text-center text-success lead" style="font-size:1em">{{ hyp }}</p>
         <br />
     <div style="text-align:center">
     
-    <form action="{{ action }}">
-    <button class="text-center btn">Get next sound clip</button>
+    <form action="/{{ action }}">
+    <button class="text-center btn">Restart experiment</button>
     </form>
     </div>
 {% endblock %}
