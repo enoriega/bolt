@@ -60,6 +60,8 @@
             $("#continue").click(function(){
                 $("#input-action").val("fix");
             });
+
+            $("#lucky").removeAttr("disabled");
             
         });
     </script>
@@ -75,7 +77,7 @@
     <br /><br />-->
     <label style="display:none" for="refid">Ref #:&nbsp;<input style="display:inline" placeholder="0-{{ref_num}}" class="input-mini" id="refid" name="refid" type="text" maxlength="5" /></label>
     <!--<button id="select" style="margin-bottom:0px" class="btn">Select</button>-->
-    <button id="lucky" style="margin-bottom:0px" class="btn">Get sound clip</button>
+    <button id="lucky" disabled="disabled" style="margin-bottom:0px" class="btn">Get sound clip</button>
     </p>
 
     <br />
