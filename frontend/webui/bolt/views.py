@@ -16,6 +16,9 @@ from bolt import intelligence
 from bolt.templatetags.bolt_tags import filter_refhyp
 
 
+def index(request):
+    return render(request, 'launcher.html')
+
 def better_choice(request):
 
     # Log the transition

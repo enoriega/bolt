@@ -3,7 +3,8 @@ from django.conf.urls import patterns, url
 from bolt import views, ok_index, error_index, m4_index, l4_index, index
 
 urlpatterns = patterns('',
-    url(r'^$', views.input, {'index': index, 'name':'input'}, name='index'),
+    url(r'^$', views.index, name='index'),
+    #url(r'^$', views.input, {'index': index, 'name':'input'}, name='index'),
     url(r'^input/*$', views.input, {'index': index, 'name':'input'}, name='input'),
     url(r'^l4/*$', views.input, {'index': l4_index, 'name':'l4'}, name='l4'),
     url(r'^m4/*$', views.input, {'index': m4_index, 'name':'m4'}, name='m4'),
