@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% load bootstrap_toolkit %}
+{% load bolt_tags %}
 
 {% block extra_head %}
     <script type="text/javascript">
@@ -45,7 +46,7 @@
             <!--<select multiple="multiple" id="choices" name="choices" style="width:100%; min-heigth:4000px; font-size:1em">-->
                 {% for item in nbest %}
                     <!--<option style="color:green; margin-bottom:5px">{{ item }}</option>-->
-                    <input type="radio" style="color:green; margin-bottom:5px"  class="choices" name="choices" value="{{item}}"><span style="color:green; margin-left:1em">{{ item }}</span></input><br /><br />
+                    <input type="radio" style="color:green; margin-bottom:5px"  class="choices" name="choices" value="{{item}}"><span style="color:green; margin-left:1em">{{ item|filter_refhyp }}</span></input><br /><br />
                     {% endfor %}
                 <!--</select>-->
         </div>

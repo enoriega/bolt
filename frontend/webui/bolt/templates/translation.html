@@ -1,13 +1,14 @@
 {% extends "base.html" %}
 
 {% load bootstrap_toolkit %}
+{% load bolt_tags %}
 
 {% block content %}
 
     <br />
     <p class="lead text-center">The following sentence goes to translation</p>
 
-    <p class="text-center text-success lead" style="font-size:1em">{{ hyp }}</p>
+    <p class="text-center text-success lead" style="font-size:1em">{{ hyp|filter_refhyp }}</p>
         <br />
     <div style="text-align:center">
     

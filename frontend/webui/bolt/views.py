@@ -78,6 +78,7 @@ def translation(request):
     # Log
     log = request.session['log']
     entry = log[-1]
+    entry['session_key'] = request.session.session_key
     if 'end_time' not in entry:
         entry['end_time'] = datetime.now()
     ####

@@ -160,6 +160,7 @@ LOGGING = {
 }
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.file'
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_FILE_PATH = '/tmp/'
 
 # Parse database configuration from $DATABASE_URL
