@@ -89,13 +89,23 @@ def translation(request):
 
     hyp = request.session['translated']
     # Write the log to the FS
-    persist_log(log)
+    if not 'DEBUG' in request.session or not request.session['DEBUG']:
+        persist_log(log)
     #########################
     action = reverse(request.session['initial_view'])
     return render(request, 'translation.html', {"hyp": hyp, 'action':action, 'wav':wav, 'initial_view':request.session['initial_view']})
 
-def input(request, index = None, name=None):
+def test(request, index = None, name = None):
+    ''' Input view whenever we don't want to log the results '''
+    return input(request, index, name, True)
+
+
+def input(request, index = None, name=None, debug=False):
     request.session.clear()
+
+    if debug:
+        request.session['DEBUG'] = True
+
     # Initialize the log entry
     log = [] 
     entry = {}
