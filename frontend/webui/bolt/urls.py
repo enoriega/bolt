@@ -17,4 +17,5 @@ urlpatterns = patterns('',
     url(r'^logistic_classifiation/$', views.logistic_classification, name='logistic-classification'),
     url(r'^linear_regression/$', views.linear_regression, name='linear-regression'),
     url(r'^exit/$', views.exit, name='exit'),
+    url(r'^log-play/$', views.log_play, name='log-play'),
 )

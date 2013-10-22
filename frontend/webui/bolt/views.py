@@ -80,6 +80,7 @@ def retype_ref(request):
 def translation(request):
     # Log
     log = request.session['log']
+    play = request.session['PLAY']
     entry = log[-1]
     entry['session_key'] = request.session.session_key
     if 'end_time' not in entry:
@@ -90,7 +91,7 @@ def translation(request):
     hyp = request.session['translated']
     # Write the log to the FS
     if not 'DEBUG' in request.session or not request.session['DEBUG']:
-        persist_log(log)
+        persist_log(log, play)
     #########################
     action = reverse(request.session['initial_view'])
     return render(request, 'translation.html', {"hyp": hyp, 'action':action, 'wav':wav, 'initial_view':request.session['initial_view']})
@@ -114,6 +115,7 @@ def input(request, index = None, name=None, debug=False):
     log.append(entry)
     
     request.session['log'] = log
+    request.session['PLAY'] = 1 # Counter that keeps track of how many times the user has clicked the play button
     #############################
     request.session['initial_view'] = name
     data = { 'ref_num' : len(index)- 1, 'index':json.dumps(index), 'initial_view':request.session['initial_view']}
@@ -243,3 +245,11 @@ def linear_regression(request):
 
 def exit(request):
     return render(request, "exit.html", {'action':request.session['initial_view']})
+
+def log_play(request):
+    '''This function logs whenever the user clicks play in the
+    media player'''
+
+    request.session['PLAY'] += 1
+
+    return HttpResponse('Success')

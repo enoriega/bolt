@@ -2,10 +2,11 @@ import pickle
 import os
 import uuid
 
-def persist_log(log):
+def persist_log(log, play):
     print log
     with create_file() as file:
-        pickle.dump(log, file)
+        entry = {'log': log, 'play':play}
+        pickle.dump(entry, file)
 
 def create_file():
     dir = 'logs'

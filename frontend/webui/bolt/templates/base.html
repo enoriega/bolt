@@ -27,7 +27,14 @@
                 return false;
             });
 
-
+            $("#player").click(function(){
+                if(this.paused){
+                    url = "{% url 'log-play' %}"
+                    $.ajax(url).done(function(res){
+                        // Do nothing with the response
+                    })
+                }
+            });
         });
 
             $(window).on('onbeforeunload', function(){
