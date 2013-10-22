@@ -87,7 +87,6 @@ def translation(request):
         entry['end_time'] = datetime.now()
     ####
     wav = request.session['wav']
-
     hyp = request.session['translated']
     # Write the log to the FS
     if not 'DEBUG' in request.session or not request.session['DEBUG']:
@@ -115,7 +114,7 @@ def input(request, index = None, name=None, debug=False):
     log.append(entry)
     
     request.session['log'] = log
-    request.session['PLAY'] = 1 # Counter that keeps track of how many times the user has clicked the play button
+    request.session['PLAY'] = [] # Counter that keeps track of how many times the user has clicked the play button
     #############################
     request.session['initial_view'] = name
     data = { 'ref_num' : len(index)- 1, 'index':json.dumps(index), 'initial_view':request.session['initial_view']}
@@ -250,6 +249,8 @@ def log_play(request):
     '''This function logs whenever the user clicks play in the
     media player'''
 
-    request.session['PLAY'] += 1
+    play = request.session['PLAY']
+    play.append(datetime.now())
+    request.session['PLAY'] = play
 
     return HttpResponse('Success')
