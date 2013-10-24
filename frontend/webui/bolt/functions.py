@@ -3,10 +3,12 @@ import os
 import uuid
 
 def persist_log(log, play):
-    print log
-    with create_file() as file:
-        entry = {'log': log, 'play':play}
-        pickle.dump(entry, file)
+    try:
+        with create_file() as file:
+            entry = {'log': log, 'play':play}
+            pickle.dump(entry, file)
+    except IOError as e:
+        print e
 
 def create_file():
     dir = 'logs'

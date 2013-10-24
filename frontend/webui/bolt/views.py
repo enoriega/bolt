@@ -147,6 +147,9 @@ def selected(request):
         elif action in ('perfect',):
             request.session['translated'] = choice
             ret = HttpResponseRedirect(reverse('translation'))
+        else:
+            # Should never fell into here but sometimes the timing of JS is out of sync and we get no action
+            ret = HttpResponseRedirect(reverse('retype-ref'))
             
 
         # Log stuff
