@@ -18,7 +18,7 @@ from sklearn.grid_search import GridSearchCV
 from sklearn.preprocessing import scale
 from sklearn.feature_selection import f_classif, SelectKBest
 from nltk.probability import entropy
-from boltdata import read_output
+from bolt_learning.data import read_output
 from sausages import Sausage, read_nbest, read_word_scores
 from difflib import SequenceMatcher
 
