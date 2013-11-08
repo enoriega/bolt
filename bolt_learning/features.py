@@ -75,6 +75,8 @@ def get_classification_dataset():
         try:
             aligned_hyp, score = sausage.align_hyp(' '.join(hyp))
         except:
+            names = names[:-1]
+            hyps = hyps[:-1]
             continue    
         target.append(tag)
         ascore, lscore, _ = read_nbest(nbest)[0]
@@ -120,6 +122,8 @@ def get_regression_dataset(ids=None):
         try:
             aligned_hyp, score = sausage.align_hyp(' '.join(hyp))
         except:
+            names = names[:-1]
+            hyps = hyps[:-1]
             continue    
         #Add the WER to targets
         target.append(WER(ref, hyp))

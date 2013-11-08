@@ -1,12 +1,14 @@
 from sklearn.linear_model import LogisticRegression
-import prepare_dataset_sxs as pd
+#import prepare_dataset_sxs as pd
+from bolt_learning.features import get_classification_dataset
 import pickle
 
 
 with open('logistic_regression.pickle', 'r') as f:
     model = pickle.load(f)
 
-data_set = pd.get_dataset()
+#data_set = pd.get_dataset()
+data_set = get_classification_dataset()
 
 y_pred = model.predict(data_set.data)
 
